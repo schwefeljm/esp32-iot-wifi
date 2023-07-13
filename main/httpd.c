@@ -61,10 +61,10 @@ esp_err_t post_handler(httpd_req_t *req)
      * as well be any binary data (needs type casting).
      * In case of string data, null termination will be absent, and
      * content length would give length of string */
-    char content[100];
+    char content[req->content_len];
 
     /* Truncate if content length larger than the buffer */
-    size_t recv_size = MIN(req->content_len, sizeof(content));
+    size_t recv_size = sizeof(content);
 
     int ret = httpd_req_recv(req, content, recv_size);
     if (ret <= 0) {  /* 0 return value indicates connection closed */

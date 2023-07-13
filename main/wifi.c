@@ -9,7 +9,6 @@
 #include "globals.h"
 
 
-
 bool init_wifi(bool override)
 {
 
