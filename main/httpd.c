@@ -1,8 +1,11 @@
 #include "esp_http_server.h"
 #include "esp_spiffs.h"
 #include "esp_vfs.h"
+#include "http_parser.h"
 #include "httpd.h"
 #include "log.h"
+#include "globals.h"
+#include "hashmap.h"
 
 
 
@@ -61,7 +64,11 @@ esp_err_t post_handler(httpd_req_t *req)
      * as well be any binary data (needs type casting).
      * In case of string data, null termination will be absent, and
      * content length would give length of string */
+    
+    
     char content[req->content_len];
+
+    
 
     /* Truncate if content length larger than the buffer */
     size_t recv_size = sizeof(content);

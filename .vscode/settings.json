@@ -16,7 +16,8 @@
     "idf.flashType": "JTAG",
     "C_Cpp.errorSquiggles": "disabled",
     "files.associations": {
-        "globals.h": "c"
+        "globals.h": "c",
+        "http_parser.h": "c"
     },
     "C_Cpp.dimInactiveRegions": false
 }
