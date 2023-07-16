@@ -18,17 +18,18 @@ void setNode(struct node_s* node, char* key, char* value)
 };
 
 // like constructor
-void initializeHashMap()
+void initializeHashMap(int count)
 {
-	ESP_LOGI(TAG, "4 %i", (int) &postData);
-	ESP_LOGI(TAG, "5 %i", (int) &postData);
-	postData->capacity = 100;
+	postData->capacity = count;
 	postData->numOfElements = 0;
 
 
 	// array of size = 1
 	postData->arr = (struct node_s**)malloc(sizeof(struct node_s*)
 									* postData->capacity);
+	
+	insertHashEntry("TestKey", "ValueTest");
+
 	return;
 }
 
@@ -57,11 +58,12 @@ int hashFunction(char* key)
 	return bucketIndex;
 }
 
-void insert(char* key, char* value)
+void insertHashEntry(char* key, char* value)
 {
 
 	// Getting bucket index for the given
 	// key - value pair
+	// printf("key: %s -- value %s\n", key, value);
 	int bucketIndex = hashFunction(key);
 	struct node_s* newNode = (struct node_s*)malloc(
 
@@ -74,7 +76,7 @@ void insert(char* key, char* value)
 	// Bucket index is empty....no collision
 	if (postData->arr[bucketIndex] == NULL) {
 		postData->arr[bucketIndex] = newNode;
-		ESP_LOGI(TAG, "8 %i", (int) &postData);
+		
 	}
 	
 
@@ -87,7 +89,6 @@ void insert(char* key, char* value)
 		// head in linked list
 		newNode->next = postData->arr[bucketIndex];
 		postData->arr[bucketIndex] = newNode;
-		ESP_LOGI(TAG, "8.1 %i", (int) &postData);
 	}
 	return;
 }
@@ -131,7 +132,7 @@ void delete (char* key)
 	return;
 }
 
-char* postSearch(char* key)
+char* searchHashEntry(char* key)
 {
 
 	// Getting the bucket index
@@ -140,9 +141,7 @@ char* postSearch(char* key)
 
 	// Head of the linked list
 	// present at bucket index
-	ESP_LOGI(TAG, "9 %i", (int) &postData);
 	struct node_s* bucketHead = postData->arr[bucketIndex];
-	ESP_LOGI(TAG, "10 %i", (int) &postData);
 	//
 	// Load Access Fault happens here when passing a non-existant 'key'
 	// Fix later.
@@ -166,26 +165,20 @@ char* postSearch(char* key)
 
 int postDataToHashMap(char *string[])
 {
-//	char string[50] = "Hello! We are learning about strtok";
 	// Extract the first token
 	char * token = strtok(*string, " ");
 	// loop through the string to extract all other tokens
 	while( token != NULL ) {
-		printf( " %s\n", token ); //printing each token
 		token = strtok(NULL, " ");
     }
     return 0;
-	//ESP_LOGI(TAG, "String: %s, Delimeter: %s", &string, &delimiter);	
+
 
 	return 0;
 }
 // This could be made better I think. But it works.
 void stringSplitter(char *string, char *delimeter, char *tokenArray[])
 {
-    int count = tokenCount(string, delimeter);
-
-    //tokenArray[count + 1];
-
     int tokenArrayPos = 0;
     char* token;
 
@@ -201,7 +194,7 @@ void stringSplitter(char *string, char *delimeter, char *tokenArray[])
         tokenArrayPos++;
     }
 
-    //return tokenArray;
+
 }
 
 int tokenCount(char *string, char *delimeter)
@@ -218,6 +211,39 @@ int tokenCount(char *string, char *delimeter)
     }
 	return count;
 }
+
+
+void createPostHashFromPostData(char *string, char *delimeter)
+{
+    int count = tokenCount(string, delimeter);
+	char* tokenArray[count+1];
+    
+    stringSplitter(string, delimeter, tokenArray);
+
+
+
+    int arrayElements = (sizeof(tokenArray) / sizeof(tokenArray[0]));
+    for(int i=0; i <= arrayElements-1; i++)
+    {
+
+        char* paramArray[2]; // params are just key/value pairs. Always 2
+
+		// not sure why, but this keeps past strings from padding new ones.
+		char* dummy = "";
+		//sprintf(dummy, "%s", paramArray[1]);
+        int stringSize = strlen(tokenArray[i]);
+        char string[stringSize];
+        strncpy((char*)string, (char*)tokenArray[i], stringSize);
+        char delimeter[] = "=";
+        stringSplitter(string, delimeter, paramArray);
+        printf("\n---------------------------\n%s:%s\n-------------------------\n", paramArray[0], paramArray[1]); 
+		insertHashEntry(paramArray[0], paramArray[1]);
+		
+    }
+
+    
+}
+
 
 /* 	Keep this around for looping.
 
