@@ -7,27 +7,58 @@
 
 
 
-char* nvs_load_str_value_if_exist(const char* key)
+char* iot_nvs_load_str_value_if_exist(const char* key)
 {
   
     // Try to get the size of the item
     size_t value_size;
     if(nvs_get_str(handle, key, NULL, &value_size) != ESP_OK){
         ESP_LOGE(TAG, "Failed to get size of key: %s", key);
+        // This will crash program
         return NULL;
     }
 
     char* value = malloc(value_size);
     if(nvs_get_str(handle, key, value, &value_size) != ESP_OK){
         ESP_LOGE(TAG, "Failed to load key: %s", key);
+        // This will crash program
         return NULL;
     }
     // Need to fix this
     return value;
 }
 
+bool iot_nvs_set_str_value_if_exist(const char* key, char* value)
+{
+    size_t value_size;
+    if(nvs_get_str(handle, key, NULL, &value_size) == ESP_OK)
+    {
+        if(nvs_set_str(handle, key, value) == ESP_OK)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    } 
+    return false;
 
-int32_t nvs_load_int_value_if_exist(const char* key)
+}
+
+bool iot_nvs_set_int_value_if_exist(const char* key, int32_t value)
+{
+    int32_t value_pass = value;
+    if(nvs_set_i32(handle, key, value_pass) == ESP_OK)
+    {
+        return true;
+    } 
+
+    return false;
+
+}
+
+int32_t iot_nvs_load_int_value_if_exist(const char* key)
 {
     int32_t value = -1;
   
@@ -39,7 +70,7 @@ int32_t nvs_load_int_value_if_exist(const char* key)
 }
 
 
-nvs_handle_t init_flash(nvs_handle_t handle, char* namespace) {
+nvs_handle_t iot_init_flash(nvs_handle_t handle, char* namespace) {
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) 
     {

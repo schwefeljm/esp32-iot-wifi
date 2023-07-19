@@ -5,11 +5,12 @@
 #include "httpd.h"
 #include "log.h"
 #include "globals.h"
-#include "hashmap.h"
-
-
+#include "utils.h"
+#include "nvs.h"
 
 #define INDEX_HTML_PATH "/spiffs/index.html"
+
+void update_settings(char* postString);
 
 char index_html[4096];
 char response_data[4096];
@@ -45,7 +46,7 @@ esp_err_t send_web_page(httpd_req_t *req)
     int response;
 
     //char* WIFI_SSID = nvs_load_value_if_exist("wifi-ssid");
-    sprintf(response_data, index_html, "WIFI_SSID", "WIFI_PASS");
+    sprintf(response_data, index_html, iot_configuration.wifi_settings.ssid, iot_configuration.wifi_settings.passwd);
     response = httpd_resp_send(req, response_data, HTTPD_RESP_USE_STRLEN);
     return response;
 }
@@ -89,8 +90,54 @@ esp_err_t post_handler(httpd_req_t *req)
 
     /* Send a simple response */
     const char resp[] = "URI POST Response";
+    update_settings(content);
     httpd_resp_send(req, resp, HTTPD_RESP_USE_STRLEN);
     return ESP_OK;
+}
+
+void update_settings(char* postString)
+{
+    //char string[] = "wifi-ssid=fuck&wifi-passwd=duckduck";
+    bool reset = false;
+    char* ssidKey = "wifi-ssid";
+    char* passwdKey = "wifi-passwd";
+    
+    char delimeter[] = "&";
+
+    int count = tokenCount(postString, delimeter);
+	
+    char* tokenArray[count+1];
+    stringSplitter(postString, delimeter, tokenArray);
+
+    for(int i = 0; i <= count; i++) 
+    {   
+
+        
+        char* paramArray[2];
+        printf("Token Array: %s", tokenArray[1]);
+        
+        stringSplitter(tokenArray[i], "=", paramArray);
+        if((strcmp(paramArray[0], ssidKey) == 0) || (strcmp(paramArray[0], passwdKey) == 0))
+        {
+            reset = true;
+            if(iot_nvs_set_int_value_if_exist("wifi-mode", 2))
+            {
+                ESP_LOGI(TAG, "wifi-mode set to 2");
+            }
+            else 
+            {
+                ESP_LOGE(TAG, "Failed to set wifi-mode");
+            }
+
+        }
+
+        iot_nvs_set_str_value_if_exist(paramArray[0], paramArray[1]);
+    }
+
+    if(reset) 
+    {
+        esp_restart();
+    }
 }
 
 httpd_uri_t uri_get = {
@@ -104,9 +151,6 @@ httpd_uri_t uri_post = {
     .method = HTTP_POST,
     .handler = post_handler,
     .user_ctx = NULL};
-
-
-
 
 httpd_handle_t setup_http_server(void)
 {

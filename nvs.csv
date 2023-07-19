@@ -2,8 +2,8 @@ key,type,encoding,value
 fact_config,namespace,,
 wifi-mode,data,i32,1
 wifi-ssid,data,string,ESP-IOT-SETUP
-wifi-passwd,data,string,0101020221
+wifi-passwd,data,string,ESP-IOT-PASSWD
 user_config,namespace,,
 wifi-mode,data,i32,1
 wifi-ssid,data,string,ESP-IOT-SETUP
-wifi-passwd,data,string,0101020221
+wifi-passwd,data,string,ESP-IOT-PASSWD

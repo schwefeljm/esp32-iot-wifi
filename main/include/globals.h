@@ -2,6 +2,14 @@
     #define globals
     #include "nvs_flash.h"
 
+
+    #define IOT_WIFI_MODE wifi-mode
+    #define IOT_WIFI_SSID wifi-ssid
+    #define IOD_WIFI_PASSWORD wifi-passwd
+
+
+    void globals_init(void);
+
     typedef struct wifi_connection_s
     {  
         int32_t mode;
@@ -11,43 +19,23 @@
 
     typedef struct iot_configuration_s
     {
-        wifi_connection_s wifi_settings_t;
+        wifi_connection_s wifi_settings;
     } iot_configuration_s;
 
-    typedef struct hashMap_s
-    {
-	    // Current number of elements in hashMap
-    	// and capacity of hashMap
-    	int numOfElements, capacity;
 
-	    // hold base address array of linked list
-	    struct node_s** arr;
-    } hashMap_s;
-
-    typedef struct node_s {
-
-        // key is string
-        char* key;
-
-        // value is also string
-        char* value;
-        struct node_s* next;
-    } node_s;
-
-
-    #ifdef  MAIN_FILE
+    #ifdef  GLOBALS_FILE
+        nvs_handle_t iot_nvs_user_handle;
         nvs_handle_t handle;
-        iot_configuration_s iot_configuration_t;
-        hashMap_s hashMap;
-        //node_s node;
-        struct hashMap_s* postData;
+        iot_configuration_s iot_configuration;
+        char* invalid_nvs_return;
+        
 
     #else
+        extern nvs_handle_t iot_nvs_user_handle;
         extern nvs_handle_t handle;
-        extern iot_configuration_s iot_configuration_t;
-        extern hashMap_s hashMap;
-        extern struct hashMap_s* postData;
-
+        extern iot_configuration_s iot_configuration;
+        extern char* invalid_nvs_return;
+        
 
     #endif
 

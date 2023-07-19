@@ -3,3 +3,5 @@ sdkconfig
 sdkconfig.old
 *.bin
 *.log
+cmake-build-debug/
+.idea/
