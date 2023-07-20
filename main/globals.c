@@ -3,6 +3,8 @@
 #include "nvs.h"
 #include <string.h>
 
+
+
 void globals_init(void)
 {
 
