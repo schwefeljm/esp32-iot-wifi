@@ -1,12 +1,20 @@
+#include "nvs_flash.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/queue.h"
+#include "driver/gpio.h"
+
+
+
 #ifndef globals
     #define globals
-    #include "nvs_flash.h"
+
 
 
     #define IOT_WIFI_MODE wifi-mode
     #define IOT_WIFI_SSID wifi-ssid
     #define IOD_WIFI_PASSWORD wifi-passwd
-
+    #define ESP_INTR_FLAG_DEFAULT 0 
+    #define LED_PIN GPIO_NUM_0
 
     void globals_init(void);
 
@@ -28,17 +36,29 @@
         nvs_handle_t handle;
         iot_configuration_s iot_configuration;
         char* invalid_nvs_return;
-        
+            
+
+        QueueHandle_t interputQueue;
+        int interruptPinMap[8] = {GPIO_NUM_1
+                                ,GPIO_NUM_7
+                                ,INT32_MAX
+                                ,INT32_MAX
+                                ,INT32_MAX
+                                ,INT32_MAX
+                                ,INT32_MAX
+                                ,INT32_MAX
+                                };
 
     #else
         extern nvs_handle_t iot_nvs_user_handle;
         extern nvs_handle_t handle;
         extern iot_configuration_s iot_configuration;
         extern char* invalid_nvs_return;
-        
+        extern QueueHandle_t interputQueue;
+        extern int interruptPinMap[];
+
 
     #endif
 
-
-
 #endif
+
