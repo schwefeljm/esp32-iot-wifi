@@ -8,19 +8,65 @@
 #include "wifi.h"
 #include "httpd.h"
 #include "utils.h"
-#include "interrupt.h"
+//#include "interrupt.h"
+//#include "esp_sleep.h"
+#include "sleep.h"
+//#include <sys/time.h>
+//#include "driver/uart.h"
+//#include "esp_timer.h"
+
+
+
+#define wakePin GPIO_NUM_0
+#define GPIO_WAKEUP_NUM wakePin
+#define TIMER_WAKEUP_TIME_US    (2 * 1000 * 1000)
+
+
+
 
 void app_main(void)
 {
     ESP_LOGI(TAG, "Stating up");
   
     globals_init();
+    
+    
+    set_gpio_wake_task();
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 
+    ESP_ERROR_CHECK(gpio_set_pull_mode(LED_PIN, GPIO_PULLDOWN_ONLY));
     ESP_ERROR_CHECK(gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT));
     ESP_ERROR_CHECK(gpio_set_pull_mode(interruptPinMap[0], GPIO_PULLUP_ONLY));
     ESP_ERROR_CHECK(gpio_set_direction(interruptPinMap[0], GPIO_MODE_INPUT));
-    ESP_ERROR_CHECK(gpio_set_pull_mode(LED_PIN, GPIO_PULLDOWN_ONLY));
  
     config_interrupts();
 
@@ -32,7 +78,8 @@ void app_main(void)
         setup_http_server();
     }
 
-
-    ESP_LOGI(TAG, "Initialization COMPLETE!");
+ */
 
 };
+
+

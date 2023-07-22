@@ -10,11 +10,13 @@
 
 
 
-    #define IOT_WIFI_MODE wifi-mode
-    #define IOT_WIFI_SSID wifi-ssid
-    #define IOD_WIFI_PASSWORD wifi-passwd
-    #define ESP_INTR_FLAG_DEFAULT 0 
-    #define LED_PIN GPIO_NUM_0
+    #define IOT_WIFI_MODE                   wifi-mode
+    #define IOT_WIFI_SSID                   wifi-ssid
+    #define IOD_WIFI_PASSWORD               wifi-passwd
+    #define ESP_INTR_FLAG_DEFAULT           0 
+    #define LED_PIN                         GPIO_NUM_1
+    #define GPIO_WAKEUP_LEVEL_HIGH          1
+    #define GPIO_WAKEUP_LEVEL_LOW           0
 
     void globals_init(void);
 
@@ -39,8 +41,8 @@
             
 
         QueueHandle_t interputQueue;
-        int interruptPinMap[8] = {GPIO_NUM_1
-                                ,GPIO_NUM_7
+        int interruptPinMap[8] = {GPIO_NUM_0
+                                ,GPIO_NUM_1
                                 ,INT32_MAX
                                 ,INT32_MAX
                                 ,INT32_MAX
