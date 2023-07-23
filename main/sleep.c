@@ -11,9 +11,13 @@
 #include <time.h>
 //#include "esp_wifi.h"
 #include "esp_check.h"
+#include "driver/rtc_io.h"
 
 #define GPIO_WAKEUP_NUM_1 0
 #define GPIO_WAKEUP_NUM_2 1
+
+#define SOC_PM_SUPPORT_EXT0_WAKEUP 1
+
 
 //static struct timeval sleep_enter_time;
 
@@ -37,7 +41,7 @@ static void light_sleep_task(void *args)
         int64_t t_before_us = esp_timer_get_time();
 
         /* Enter sleep mode */
-        esp_light_sleep_start();
+        esp_deep_sleep_start();
 
         /* Get timestamp after waking up from sleep */
         int64_t t_after_us = esp_timer_get_time();
@@ -59,6 +63,7 @@ static void light_sleep_task(void *args)
             /* Waiting for the gpio inactive, or the chip will continously trigger wakeup*/
             example_wait_gpio_inactive();
         }
+
     }
     vTaskDelete(NULL);
 }
@@ -67,7 +72,7 @@ static void light_sleep_task(void *args)
 static void example_wait_gpio_inactive(void)
 {
     printf("Waiting for GPIO%d to go high...\n", interruptPinMap[0]);
-    while (gpio_get_level(interruptPinMap[0]) == GPIO_WAKEUP_LEVEL_HIGH) {
+    while (gpio_get_level(interruptPinMap[0]) == ESP_SLEEP_WAKEUP_EXT1) {
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
@@ -105,9 +110,20 @@ static esp_err_t example_register_gpio_wakeup(void)
     return ESP_OK;
 }
 
+
+static esp_err_t register_ext1_wakeup(void) 
+{
+
+    rtc_gpio_pulldown_en(GPIO_WAKEUP_NUM_1);
+    return esp_sleep_enable_ext1_wakeup(BIT64(GPIO_WAKEUP_NUM_1), ESP_EXT1_WAKEUP_ANY_HIGH);
+
+    //return ESP_OK;
+}
+
 esp_err_t set_gpio_wake_task()
 {
-    esp_err_t ret = example_register_gpio_wakeup();
+//    esp_err_t ret = example_register_gpio_wakeup();
+    esp_err_t ret = register_ext1_wakeup();
 
     if(ret == ESP_OK) 
     {

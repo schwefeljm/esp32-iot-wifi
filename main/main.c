@@ -8,7 +8,7 @@
 #include "wifi.h"
 #include "httpd.h"
 #include "utils.h"
-//#include "interrupt.h"
+#include "interrupt.h"
 //#include "esp_sleep.h"
 #include "sleep.h"
 //#include <sys/time.h>
@@ -27,47 +27,16 @@
 void app_main(void)
 {
     ESP_LOGI(TAG, "Stating up");
-  
+    //gpio_set_level(GPIO_NUM_1, 1);
+
     globals_init();
-    
-    
-    set_gpio_wake_task();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* 
+ 
     ESP_ERROR_CHECK(gpio_set_pull_mode(LED_PIN, GPIO_PULLDOWN_ONLY));
     ESP_ERROR_CHECK(gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT));
     ESP_ERROR_CHECK(gpio_set_pull_mode(interruptPinMap[0], GPIO_PULLUP_ONLY));
     ESP_ERROR_CHECK(gpio_set_direction(interruptPinMap[0], GPIO_MODE_INPUT));
- 
+
     config_interrupts();
 
     bool wifi_initialized = init_wifi(false);
@@ -78,7 +47,11 @@ void app_main(void)
         setup_http_server();
     }
 
- */
+
+    
+    //set_gpio_wake_task();
+
+
 
 };
 
