@@ -6,6 +6,8 @@
 #include "esp_sleep.h"
 #include "esp_log.h"
 #include "log.h"
+#include "mqtt.h"
+
 
 /*******************************************************
 
@@ -35,6 +37,19 @@ void LED_Control_Task(void *params)
         {
             //printf("GPIO %d was pressed %d times. The state is %d\n", pinNumber, count++, gpio_get_level(interruptPinMap[0]));
             gpio_set_level(LED_PIN, !gpio_get_level(interruptPinMap[0]));
+
+            if(!gpio_get_level(interruptPinMap[0]))
+            {
+                ESP_LOGI(TAG, "Switch is open");
+                send_mqtt(NULL, "On");
+
+            }
+            else
+            {
+                ESP_LOGI(TAG, "Switch is closed");
+                send_mqtt(NULL, "Off");
+
+            }
         }
     }
 }

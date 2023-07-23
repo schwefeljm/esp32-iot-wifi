@@ -2,6 +2,8 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
 #include "driver/gpio.h"
+#include "mqtt_client.h"
+#include "utils.h"
 
 
 
@@ -51,6 +53,9 @@
                                 ,INT32_MAX
                                 };
 
+        esp_mqtt_client_handle_t mqtt_client;
+        char* mac_half_low;
+
     #else
         extern nvs_handle_t iot_nvs_user_handle;
         extern nvs_handle_t handle;
@@ -58,7 +63,8 @@
         extern char* invalid_nvs_return;
         extern QueueHandle_t interputQueue;
         extern int interruptPinMap[];
-
+        extern esp_mqtt_client_handle_t mqtt_client;
+        extern char* mac_half_low;
 
     #endif
 

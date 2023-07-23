@@ -14,6 +14,8 @@
 //#include <sys/time.h>
 //#include "driver/uart.h"
 //#include "esp_timer.h"
+//#include "mqtt_client.h"
+#include "mqtt.h"
 
 
 
@@ -29,6 +31,8 @@ void app_main(void)
     ESP_LOGI(TAG, "Stating up");
     //gpio_set_level(GPIO_NUM_1, 1);
 
+
+
     globals_init();
 
  
@@ -42,17 +46,21 @@ void app_main(void)
     bool wifi_initialized = init_wifi(false);
     if (wifi_initialized) 
     {
-        init_web_page_buffer();
         //httpd_handle_t* http = setup_server();
         setup_http_server();
     }
 
-
-    
-    //set_gpio_wake_task();
-
+    //char* mac_half_low = get_mac_address_half_low();
+    ESP_LOGI(TAG, "MAC adEdress last four: %s", mac_half_low);
 
 
+    // Need to actually check if WiFi is connected.
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    iot_start_mqtt();
+
+
+
+    // set_gpio_wake_task();
 };
 
 

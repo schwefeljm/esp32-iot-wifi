@@ -21,7 +21,9 @@
         "uart.h": "c",
         "sleep.h": "c",
         "gpio.h": "c",
-        "esp_sleep.h": "c"
+        "esp_sleep.h": "c",
+        "stdio.h": "c",
+        "esp_log.h": "c"
     },
     "C_Cpp.dimInactiveRegions": false
 }

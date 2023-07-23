@@ -13,6 +13,8 @@ void globals_init(void)
     iot_nvs_user_handle = iot_init_flash(iot_nvs_user_handle, "user_config");
 
     handle = iot_nvs_user_handle;
+
+    mac_half_low = get_mac_address_half_low();
 };
 
 
